@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/aziret/s3-mini-storage/internal/lib/logger/sl"
+	_ "github.com/lib/pq"
 )
 
 type repository struct {
