@@ -1,16 +1,18 @@
 package app
 
 import (
-	filetransferServer "github.com/aziret/s3-mini-storage/internal/adapters/api/grpc_server/filetransfer"
+	"github.com/aziret/s3-mini-storage/internal/adapters/api/grpc_client/filetransfer"
 	"github.com/aziret/s3-mini-storage/internal/adapters/repository"
 	"github.com/aziret/s3-mini-storage/internal/config"
 	"github.com/aziret/s3-mini-storage/internal/lib/logger/sl"
 	"github.com/aziret/s3-mini-storage/internal/service"
 
-	fileRepository "github.com/aziret/s3-mini-storage/internal/adapters/repository/file"
-	fileService "github.com/aziret/s3-mini-storage/internal/service/file"
 	"log"
 	"log/slog"
+
+	filetransferServer "github.com/aziret/s3-mini-storage/internal/adapters/api/grpc_server/filetransfer"
+	fileRepository "github.com/aziret/s3-mini-storage/internal/adapters/repository/file"
+	fileService "github.com/aziret/s3-mini-storage/internal/service/file"
 )
 
 type serviceProvider struct {
@@ -19,6 +21,7 @@ type serviceProvider struct {
 	fileService            service.FileService
 	fileTransferServerImpl *filetransferServer.Implementation
 	grpcConfig             config.GRPCConfig
+	grpcClient             *filetransfer.Implementation
 }
 
 func newServiceProvider() *serviceProvider {
@@ -81,4 +84,12 @@ func (s *serviceProvider) Logger() *slog.Logger {
 	}
 
 	return s.log
+}
+
+func (s *serviceProvider) GRPCClient() *filetransfer.Implementation {
+	if s.grpcClient == nil {
+		s.grpcClient = filetransfer.NewImplementation(s.Logger(), s.FileService())
+	}
+
+	return s.grpcClient
 }

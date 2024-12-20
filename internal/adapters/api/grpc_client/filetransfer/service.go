@@ -4,6 +4,8 @@ import (
 	"log/slog"
 	"os"
 
+	"google.golang.org/grpc/credentials/insecure"
+
 	"github.com/aziret/s3-mini-internal/pkg/api/filetransfer_v1"
 	"github.com/aziret/s3-mini-storage/internal/lib/logger/sl"
 	"github.com/aziret/s3-mini-storage/internal/service"
@@ -24,7 +26,7 @@ func NewImplementation(logger *slog.Logger, fileService service.FileService) *Im
 
 	mainServerAddress := os.Getenv("MAIN_SERVER_ADDRESS")
 
-	conn, err := grpc.NewClient(mainServerAddress)
+	conn, err := grpc.NewClient(mainServerAddress, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Error("Failed to connect to server", sl.Err(err))
 

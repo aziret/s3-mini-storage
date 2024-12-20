@@ -41,6 +41,7 @@ func (a *App) initDeps(ctx context.Context) error {
 		a.initServiceProvider,
 		a.initGRPCServer,
 		a.initUploadFolder,
+		a.initGRPCClient,
 	}
 
 	for _, f := range inits {
@@ -89,6 +90,10 @@ func (a *App) initUploadFolder(_ context.Context) error {
 	}
 
 	return nil
+}
+
+func (a *App) initGRPCClient(ctx context.Context) error {
+	return a.serviceProvider.GRPCClient().RegisterClient(ctx)
 }
 
 func (a *App) runGRPCServer() error {
