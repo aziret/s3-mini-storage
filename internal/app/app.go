@@ -2,12 +2,15 @@ package app
 
 import (
 	"context"
+	"fmt"
+	"log"
+	"net"
+	"os"
+
 	"github.com/aziret/s3-mini-internal/pkg/api/filetransfer_v1"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/reflection"
-	"log"
-	"net"
 
 	"github.com/aziret/s3-mini-storage/internal/config"
 )
@@ -37,6 +40,7 @@ func (a *App) initDeps(ctx context.Context) error {
 		a.initConfig,
 		a.initServiceProvider,
 		a.initGRPCServer,
+		a.initUploadFolder,
 	}
 
 	for _, f := range inits {
@@ -69,6 +73,20 @@ func (a *App) initGRPCServer(_ context.Context) error {
 	reflection.Register(a.grpcServer)
 
 	filetransfer_v1.RegisterFileTransferServiceV1Server(a.grpcServer, a.serviceProvider.FileTransferImpl())
+
+	return nil
+}
+
+func (a *App) initUploadFolder(_ context.Context) error {
+	dir := os.Getenv("FILE_PATH")
+
+	if _, err := os.Stat(dir); os.IsNotExist(err) {
+		// Create the uploads directory if it doesn't exist
+		err := os.MkdirAll(dir, 0755)
+		if err != nil {
+			return fmt.Errorf("could not create directory: Dir name %s %w", dir, err)
+		}
+	}
 
 	return nil
 }
