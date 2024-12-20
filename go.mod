@@ -6,6 +6,7 @@ require (
 	github.com/aziret/s3-mini-internal v0.0.2
 	github.com/golang-migrate/migrate/v4 v4.18.1
 	github.com/joho/godotenv v1.5.1
+	github.com/lib/pq v1.10.9
 	github.com/pkg/errors v0.9.1
 	google.golang.org/grpc v1.67.1
 )
@@ -13,10 +14,7 @@ require (
 require (
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
-	github.com/lib/pq v1.10.9 // indirect
-	github.com/tus/tusd/v2 v2.6.0 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
-	golang.org/x/exp v0.0.0-20230626212559-97b1e661b5df // indirect
 	golang.org/x/net v0.30.0 // indirect
 	golang.org/x/sys v0.26.0 // indirect
 	golang.org/x/text v0.19.0 // indirect
