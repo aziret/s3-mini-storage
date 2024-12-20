@@ -6,6 +6,8 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/reflection"
+	"log"
+	"net"
 
 	"github.com/aziret/s3-mini-storage/internal/config"
 )
@@ -24,6 +26,10 @@ func NewApp(ctx context.Context) (*App, error) {
 	}
 
 	return app, nil
+}
+
+func (a *App) Run() error {
+	return a.runGRPCServer()
 }
 
 func (a *App) initDeps(ctx context.Context) error {
@@ -63,6 +69,22 @@ func (a *App) initGRPCServer(_ context.Context) error {
 	reflection.Register(a.grpcServer)
 
 	filetransfer_v1.RegisterFileTransferServiceV1Server(a.grpcServer, a.serviceProvider.FileTransferImpl())
+
+	return nil
+}
+
+func (a *App) runGRPCServer() error {
+	log.Printf("GRPC server is running on %s", a.serviceProvider.GRPCConfig().Address())
+
+	list, err := net.Listen("tcp", a.serviceProvider.GRPCConfig().Address())
+	if err != nil {
+		return err
+	}
+
+	err = a.grpcServer.Serve(list)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
