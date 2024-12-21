@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
+	"os"
 
 	"github.com/aziret/s3-mini-internal/pkg/api/filetransfer_v1"
 	"github.com/aziret/s3-mini-storage/internal/lib/logger/sl"
@@ -18,6 +19,9 @@ func (i *Implementation) RegisterClient(ctx context.Context) error {
 
 	serverID, err := i.fileService.GetServerID(ctx)
 
+	log.Info("server id", slog.String("serverID", serverID))
+	grpcServerPort := os.Getenv("GRPC_PORT")
+
 	if err != nil {
 		log.Error("failed to get server ID")
 
@@ -25,10 +29,13 @@ func (i *Implementation) RegisterClient(ctx context.Context) error {
 	}
 	req := &filetransfer_v1.PingRequest{
 		Uuid: serverID,
+		Port: grpcServerPort,
 	}
 
+	log.Info("registering client")
 	resp, err := i.filetransferClient.RegisterClient(ctx, req)
 
+	log.Info("registered client")
 	if err != nil {
 		log.Error("failed to register client ID", sl.Err(err))
 
@@ -42,5 +49,6 @@ func (i *Implementation) RegisterClient(ctx context.Context) error {
 		return fmt.Errorf("%s: %s", errorMessage, resp.GetMessage())
 	}
 
+	log.Info("registration completed")
 	return nil
 }

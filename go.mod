@@ -3,7 +3,7 @@ module github.com/aziret/s3-mini-storage
 go 1.23.2
 
 require (
-	github.com/aziret/s3-mini-internal v0.0.2
+	github.com/aziret/s3-mini-internal v0.0.3
 	github.com/golang-migrate/migrate/v4 v4.18.1
 	github.com/joho/godotenv v1.5.1
 	github.com/lib/pq v1.10.9
