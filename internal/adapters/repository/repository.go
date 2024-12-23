@@ -5,6 +5,7 @@ import (
 	"errors"
 
 	"github.com/aziret/s3-mini-storage/internal/model"
+	"github.com/google/uuid"
 )
 
 var (
@@ -14,5 +15,5 @@ var (
 type FileRepository interface {
 	GetServerID(ctx context.Context) (string, error)
 	SaveFile(ctx context.Context, info *model.FileInfo) error
-	GetFile(ctx context.Context, UUID string) (*model.FileInfo, error)
+	GetFile(ctx context.Context, UUID uuid.UUID) (*model.FileInfo, error)
 }
