@@ -8,4 +8,5 @@ import (
 type FileService interface {
 	GetServerID(ctx context.Context) (string, error)
 	SaveFile(ctx context.Context, file *model.File) error
+	GetFileData(ctx context.Context, UUID string) ([]byte, error)
 }

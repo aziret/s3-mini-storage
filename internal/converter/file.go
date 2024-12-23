@@ -5,7 +5,7 @@ import (
 	"github.com/aziret/s3-mini-storage/internal/model"
 )
 
-func ToFileFromApi(req *filetransfer_v1.FileChunk) *model.File {
+func ToFileFromApi(req *filetransfer_v1.FileChunkUpload) *model.File {
 	return &model.File{
 		Data: req.GetData(),
 		UUID: req.GetUuid(),

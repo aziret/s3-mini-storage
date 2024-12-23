@@ -14,4 +14,5 @@ var (
 type FileRepository interface {
 	GetServerID(ctx context.Context) (string, error)
 	SaveFile(ctx context.Context, info *model.FileInfo) error
+	GetFile(ctx context.Context, UUID string) (*model.FileInfo, error)
 }

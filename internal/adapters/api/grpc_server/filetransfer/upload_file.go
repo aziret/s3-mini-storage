@@ -2,16 +2,17 @@ package filetransfer
 
 import (
 	"fmt"
-	"github.com/aziret/s3-mini-storage/internal/converter"
 	"io"
 	"log/slog"
+
+	"github.com/aziret/s3-mini-storage/internal/converter"
 
 	"github.com/aziret/s3-mini-internal/pkg/api/filetransfer_v1"
 	"github.com/aziret/s3-mini-storage/internal/lib/logger/sl"
 	"google.golang.org/grpc"
 )
 
-func (i *Implementation) UploadFile(stream grpc.ClientStreamingServer[filetransfer_v1.FileChunk, filetransfer_v1.UploadStatus]) error {
+func (i *Implementation) UploadFile(stream grpc.ClientStreamingServer[filetransfer_v1.FileChunkUpload, filetransfer_v1.UploadStatus]) error {
 	const op = "grpcServer.filetransfer.UploadFile"
 
 	log := i.logger.With(
