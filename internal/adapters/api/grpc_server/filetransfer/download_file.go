@@ -2,6 +2,7 @@ package filetransfer
 
 import (
 	"fmt"
+	"io"
 	"log/slog"
 
 	"github.com/aziret/s3-mini-internal/pkg/api/filetransfer_v1"
@@ -19,8 +20,14 @@ func (i *Implementation) DownloadFile(stream grpc.BidiStreamingServer[filetransf
 
 	for {
 		req, err := stream.Recv()
+
 		if err != nil {
+			if err == io.EOF {
+				log.Info("streaming closed")
+				break
+			}
 			log.Error("failed to receive a request", sl.Err(err))
+			return fmt.Errorf("%s: %w", op, err)
 		}
 
 		data, err := i.fileService.GetFileData(ctx, req.GetUuid())
@@ -40,4 +47,6 @@ func (i *Implementation) DownloadFile(stream grpc.BidiStreamingServer[filetransf
 			return fmt.Errorf("failed to send: %v", err)
 		}
 	}
+
+	return nil
 }
