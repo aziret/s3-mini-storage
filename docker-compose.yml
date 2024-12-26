@@ -1,0 +1,31 @@
+services:
+  backend:
+    build: .
+    ports:
+      - "50050:50051"
+    depends_on:
+      - db
+    environment:
+      - ENV=local
+      - MIGRATIONS_PATH=/app/internal/adapters/repository/db/migrations
+      - MIGRATIONS_TABLE=migrations
+      - PG_USER=myuser
+      - PG_PASS=mysecretpassword
+      - PG_HOST=db
+      - PG_PORT=5432
+      - PG_DB=s3_mini_storage
+      - PG_SSL_MODE=disable
+      - CHUNK_SIZE=10000
+      - GRPC_HOST=localhost
+      - GRPC_PORT=50051
+
+  db:
+    image: postgres:latest
+    ports:
+      - "5431:5432"
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=mysecretpassword
+      - POSTGRES_USER=myuser
+      - POSTGRES_DB=s3_mini_storage
+      - POSTGRES_SSLMODE=disable
